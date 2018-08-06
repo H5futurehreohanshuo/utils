@@ -314,3 +314,13 @@ const exchangeNumber = (a, b) => {
   return [a, b];
 }
 console.log(exchangeNumber(13123123, 2));
+
+// 判断 obj 是否是空对象
+const isEmptyObj = (obj) => {
+  return Object.getOwnPropertyNames(obj).length === 0;
+}
+
+// 用于获取元素宽高以及距离页面边框距离
+const getBoundingClientRect = (doc) => {
+  return doc.getBoundingClientRect();
+}
