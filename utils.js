@@ -135,6 +135,37 @@ const obtainDate = (d) => {
 
 }
 
+/**
+ * 日期转化工具函数
+ * @param {Date} oDate 日期对象 
+ * @param {String} format 转化格式，默认：'yyyy-MM-dd'
+ * @return 转化后的日期
+ */
+const formatDate = (oDate, format = 'yyyy-MM-dd') => {
+  const date = {
+    'M+': oDate.getMonth() + 1,
+    'd+': oDate.getDate(),
+    'h+': oDate.getHours(),
+    'm+': oDate.getMinutes(),
+    's+': oDate.getSeconds(),
+    'q+': Math.floor(oDate.getMonth() * 3 / 3),
+    'S+': oDate.getMilliseconds(),
+  };
+
+  // 因为只有年份是 4 位，所以需要单独判断，其他的都用统一方法，不过原理都是一样的
+  if (/(y+)/i.test(format)) {
+    format = format.replace(RegExp.$1, (`${oDate.getFullYear()}`).substr(4 - RegExp.$1.length));
+  }
+  
+  for (let k in date) {
+    if (new RegExp(`(${k})`).test(format)) {
+      format = format.replace(RegExp.$1, RegExp.$1.length === 1 ? date[k] : (`00${date[k]}`).substr((`${date[k]}`).length));
+    }
+  }
+
+  return format;
+}; 
+
 // console.log(obtainDate('2018-05-18 09:23:32'));
 
 // 检测是否是数组
@@ -324,3 +355,39 @@ const isEmptyObj = (obj) => {
 const getBoundingClientRect = (doc) => {
   return doc.getBoundingClientRect();
 }
+
+/**
+ * 设置cookie
+ * @param {String} cookie key
+ * @param {String} cookie value
+ */
+const setCookie = (name, value) => {
+  const now = new Date();
+  now.setDate(now.getDate() + (1000 * 60 * 60 * 24 * 30));
+  const str = `${name}=${value};expires=${now.toGMTString()};path=/;`;
+  document.cookie = str;
+};
+
+/**
+ * [得到cookie]
+ * @param {String} cookie key
+ * @return {String} value
+ */
+const getCookie = (name) => {
+  let start;
+  let end;
+
+  if (document.cookie.length > 0) {
+    start = document.cookie.indexOf(`${name}=`);
+
+    if (start !== -1) {
+      start = start + name.length + 1;
+      end = document.cookie.indexOf(';', start);
+      if (end === -1) {
+        end = document.cookie.length;
+      }
+      return unescape(document.cookie.substring(start, end));
+    }
+  }
+  return '';
+};
