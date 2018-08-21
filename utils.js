@@ -1,5 +1,5 @@
 // 判断数据类型
-function typeOf(obj) {
+const typeOf = (obj) => {
   const toString = Object.prototype.toString;
   const map = {
     '[object Boolean]': 'boolean',
@@ -17,7 +17,7 @@ function typeOf(obj) {
 }
 
 // 判断参数是否是其中之一
-function oneOf(value, validList) {
+const oneOf = (value, validList) => {
   for (let i = 0, len = validList.length; i < len; i++) {
     if (value === validList[i]) {
       return true;
@@ -26,18 +26,23 @@ function oneOf(value, validList) {
   return false;
 }
 
-// 将驼峰式命名改为用‘-’分割的命名方式，并全变为小写
-function camelcaseToHyphen(str) {
-  return str.replace(/(a-z)(A-Z)/g, '$1-$2').toLowerCase();
+// 将驼峰式命名改为用连字符式命名，并全变为小写
+const camelcaseToHyphen = (str) => {
+  return str.replace(/([A-Z])/g, "-$1").toLowerCase();
+}
+
+// 将连字符式命名改为用驼峰式命名，并全变为小写
+const hyphenToCamelcase = (str) => {
+  return str.replace(/-(\w)/g, (all, letter) => letter.toUpperCase());
 }
 
 // 首字母变成大写
-function firstUpperCase(str) {
+const firstUpperCase = (str) => {
   return str.toString()[0].toUpperCase() + str.toString().slice(1);
 }
 
 // 深拷贝(支持多层嵌套)
-function deepCopy(data) {
+const deepCopy = (data) => {
   const t = typeOf(data);
   let o;
 
@@ -64,7 +69,7 @@ function deepCopy(data) {
 }
 
 // 滚动到顶部（动画）
-function scrollTop(el, from = 0, to, duration = 500) {
+const scrollTop = (el, from = 0, to, duration = 500) => {
   if (!window.requestAnimationFrame) {
     window.requestAnimationFrame = (
       window.webkitRequestAnimationFrame ||
@@ -97,7 +102,7 @@ function scrollTop(el, from = 0, to, duration = 500) {
 }
 
 // 合并两个有序数组，结果为一个有序数组
-function sort(arr1, arr2) {
+const sort = (arr1, arr2) => {
   let min1, min2, i = 0, j = 0, result = [];
   for (let n = 0; n < arr1.length + arr2.length; n ++) {
     min1 = arr1[i] || Infinity;
@@ -111,28 +116,6 @@ function sort(arr1, arr2) {
     }
   }
   return result;
-}
-
-// 获取当前的时间yyyy-MM-dd HH:mm:ss
-const obtainDate = (d) => {
-
-  let date = d ? new Date(d) : new Date();
-  let year = date.getFullYear();
-  let month = date.getMonth() + 1;
-  let day = date.getDate();
-  let hours = date.getHours();
-  let minu = date.getMinutes();
-  let second = date.getSeconds();
-
-  //判断是否满10,并 push 到目标数组中
-  let arr = [month, day, hours, minu, second];
-  let res = [];
-  arr.forEach((item, index) => {
-    res.push(item < 10 ? "0" + item : item);
-  });
-
-  return year + '-' + res[0] + '-' + res[1] + ' ' + res[2] + ':' + res[3] + ':' + res[4];
-
 }
 
 /**
@@ -164,9 +147,7 @@ const formatDate = (oDate, format = 'yyyy-MM-dd') => {
   }
 
   return format;
-}; 
-
-// console.log(obtainDate('2018-05-18 09:23:32'));
+};
 
 // 检测是否是数组
 const isArray = (arr) => {
@@ -188,12 +169,6 @@ const isRealNum = (num) => {
   return true;
 }
 
-// console.log(isRealNum('000'));
-// console.log(isRealNum(000));
-// console.log(isRealNum('   '));
-
-// console.log(isArray([1,2,3]));
-
 // 数组去重set方法
 const changeReArr = (arr) => {
   // 两种方法都可以
@@ -201,16 +176,12 @@ const changeReArr = (arr) => {
   return [...new Set(arr)];
 }
 
-// console.log(changeReArr([1, 2, 3, 232, 1, 1, 4, 2, 3]));
-
 // 纯数组排序
 const orderArr = (arr) => {
   return arr.sort((a, b) => {
     return a - b;
   });
 }
-
-// console.log(orderArr([1, 2, 3, 232, 1, 1, 4, 2, 3]));
 
 /**
  * 数组对象排序
@@ -225,62 +196,6 @@ const orderObjArr = (arr, property) => {
     return value1 - value2;
   });
 }
-
-// console.log(orderObjArr([
-//   {
-//     value: 1
-//   }, {
-//     value: 2
-//   }, {
-//     value: 10
-//   }, {
-//     value: 3
-//   }
-// ], 'value'));
-
-/**
- * 如果数组的每一项都满足则返回true, 如果有一项不满足返回false, 终止遍历
- * @param {Array} arr 原数组
- * @param {Function} fn 需要判断的函数，数组的每一项会当作参数回传给fn中
- * @return {Boolean} 判断结果
- */
-const allTrueArr = (arr, fn) => {
-  return arr.every(item => {
-    return fn(item);
-  });
-}
-
-// console.log(allTrueArr([1,2,3,4,5,2], item => item < 5));
-
-/**
- * 如果数组的每一项都满足则返回false,如果有一项满足返回true,终止遍历
- * @param {Array} arr 原数组
- * @param {Function} fn 需要判断的函数，数组的每一项会当作参数回传给fn中
- * @return {Boolean} 判断结果
- */
-const oneTrueArr = (arr, fn) => {
-  return arr.some(item => {
-    return fn(item);
-  });
-}
-
-// console.log(oneTrueArr([1,2,3,4,5,2], item => item < 5));
-
-// 对象遍历
-const traverseObj = (obj) => {
-  for (const key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      const element = obj[key];
-      console.log(element);
-    }
-  }
-}
-
-// traverseObj({
-//   value: 1,
-//   name: 'hs',
-//   age: 25
-// });
 
 // 修改对象的数据属性
 const modifyObjAttr = () => {
@@ -297,14 +212,9 @@ const modifyObjAttr = () => {
   });
 
   person.name = 'hs'; // 修改无效
-  console.log(person);
-
 }
 
-// modifyObjAttr();
-
 const defineObjAccess = () => {
-
   let personAccess = {
     _name: '张三', //_表示是内部属性,只能通过对象的方法修改
     editor: 1
@@ -335,8 +245,6 @@ const formatMoney = (money) => {
   // });
 }
 
-// console.log(formatMoney('1234567890'));
-
 // 两个整数交换数值
 const exchangeNumber = (a, b) => {
   a ^= b;
@@ -344,7 +252,6 @@ const exchangeNumber = (a, b) => {
   a ^= b;
   return [a, b];
 }
-console.log(exchangeNumber(13123123, 2));
 
 // 判断 obj 是否是空对象
 const isEmptyObj = (obj) => {
@@ -390,4 +297,63 @@ const getCookie = (name) => {
     }
   }
   return '';
+};
+
+/**
+ * 如果数组的每一项都满足则返回true, 如果有一项不满足返回false, 终止遍历
+ * @param {Array} arr 原数组
+ * @param {Function} fn 需要判断的函数，数组的每一项会当作参数回传给fn中
+ * @return {Boolean} 判断结果
+ */
+/* const allTrueArr = (arr, fn) => {
+  return arr.every(item => {
+    return fn(item);
+  });
+} */
+
+// console.log(allTrueArr([1,2,3,4,5,2], item => item < 5));
+
+/**
+ * 如果数组的每一项都满足则返回false,如果有一项满足返回true,终止遍历
+ * @param {Array} arr 原数组
+ * @param {Function} fn 需要判断的函数，数组的每一项会当作参数回传给fn中
+ * @return {Boolean} 判断结果
+ */
+/* const oneTrueArr = (arr, fn) => {
+  return arr.some(item => {
+    return fn(item);
+  });
+} */
+
+// 对象遍历(可用 es6 的新方法 Object(...).values 代替)
+/* const traverseObj = (obj) => {
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      const element = obj[key];
+      console.log(element);
+    }
+  }
+} */
+
+module.exports = {
+  typeOf,
+  oneOf,
+  camelcaseToHyphen,
+  hyphenToCamelcase,
+  firstUpperCase,
+  deepCopy,
+  scrollTop,
+  sort,
+  formatDate,
+  isArray,
+  isRealNum,
+  changeReArr,
+  orderArr,
+  orderObjArr,
+  formatMoney,
+  exchangeNumber,
+  isEmptyObj,
+  getBoundingClientRect,
+  setCookie,
+  getCookie
 };
