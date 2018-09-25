@@ -335,6 +335,45 @@ const getCookie = (name) => {
   }
 } */
 
+/**
+ * 简单实现 lodash 中的 _.get 方法
+ * @param {Object} obj 要检索的对象
+ * @param {Array|string} path 要获取属性的路径
+ * @param {*} path 如果解析值是 undefined ，这值会被返回
+ * @return {*} 返回解析的值
+ */
+const get = (obj, props, def) => {
+  if (obj === null || typeof props !== 'string') return def;
+  const temp = props.split('.');
+  const fieldArr = [].concat(temp);
+  temp.forEach((e, i) => {
+    // case: 形如：b[1]，带有 key 和 value 的
+    if(/^(\w+)\[(\w+)\]$/.test(e)) {
+      // 下面的操作是把有 key 和 value 的拆开
+      // 比如 ['a', 'b[1]', 'c'] => ['a', 'b', '1', 'c']
+      const matches = e.match(/^(\w+)\[(\w+)\]$/);
+      const field1 = matches[1];
+      const field2 = matches[2];
+      const index = fieldArr.indexOf(e);
+      fieldArr.splice(index, 1, field1, field2);
+    }
+  });
+  // 一级一级的向下查找(如果没有找到则返回 def)
+  return fieldArr.reduce((pre, cur) => {
+    const target = pre[cur] || def;
+
+    if (target instanceof Array) {
+      return [].concat(target);
+    }
+
+    if (target instanceof Object) {
+      return Object.assign({}, target);
+    }
+
+    return target;
+  }, obj);
+};
+
 module.exports = {
   typeOf,
   oneOf,
@@ -355,5 +394,6 @@ module.exports = {
   isEmptyObj,
   getBoundingClientRect,
   setCookie,
-  getCookie
+  getCookie,
+  get
 };

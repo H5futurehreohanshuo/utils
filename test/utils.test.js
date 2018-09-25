@@ -15,7 +15,8 @@ const {
   orderObjArr,
   formatMoney,
   exchangeNumber,
-  isEmptyObj
+  isEmptyObj,
+  get
 } = require('../utils');
 
 describe('#utils', () => {
@@ -208,6 +209,13 @@ describe('#utils', () => {
 
     it('should return true when isEmptyObj({a: 1})', () => {
       expect(isEmptyObj({a: 1})).to.equal(false);
+    });
+  });
+
+  describe('get', () => {
+    it('should return 2 when get(c, "a.b[1]")', () => {
+      const c = {a: {b: [1, 2, 3]}};
+      expect(get(c, 'a.b[1]')).to.equal(2);
     });
   });
 
