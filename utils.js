@@ -122,7 +122,7 @@ const sort = (arr1, arr2) => {
  * 日期转化工具函数
  * @param {Date} oDate 日期对象 
  * @param {String} format 转化格式，默认：'yyyy-MM-dd'
- * @return 转化后的日期
+ * @returns 转化后的日期
  */
 const formatDate = (oDate, format = 'yyyy-MM-dd') => {
   const date = {
@@ -147,6 +147,21 @@ const formatDate = (oDate, format = 'yyyy-MM-dd') => {
   }
 
   return format;
+};
+
+/**
+ * 获取当天的前/后 n 天零点的时间戳
+ * @param {Number} n 天
+ * @returns {Number} 时间戳(单位：秒)
+ */
+const getZeroTimeStamp = (n = 1) => {
+  // 获取当天 0 点的时间戳
+  const timeStamp = new Date(new Date().setHours(0, 0, 0, 0)) / 1000;
+
+  // 一天是 86400 s，故 n 天前的时间戳为
+  const nDayAgo = timeStamp - 86400 * n;
+
+  return nDayAgo;
 };
 
 // 检测是否是数组
@@ -384,6 +399,7 @@ module.exports = {
   scrollTop,
   sort,
   formatDate,
+  getZeroTimeStamp,
   isArray,
   isRealNum,
   changeReArr,
